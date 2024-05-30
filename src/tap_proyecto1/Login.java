@@ -4,9 +4,21 @@ import javax.swing.*;
 import org.edisoncor.gui.button.ButtonColoredAction;
 import org.edisoncor.gui.passwordField.PasswordFieldRound;
 import org.edisoncor.gui.textField.TextFieldRound;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.awt.event.ActionEvent;
 import java.util.logging.Logger;
 import java.util.logging.Level;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
 import java.awt.EventQueue;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.event.ActionListener;
@@ -94,8 +106,28 @@ public class Login extends javax.swing.JFrame {
     }
 
     private void buttonColoredAction1ActionPerformed(ActionEvent evt) {
-        MenuPrincipal Menu = new MenuPrincipal();
-        Menu.setVisible(true);
+       String correo = fieldCorreo.getText();
+        String contrasena = new String(fieldPassword.getPassword());
+
+        String url = "jdbc:postgresql://localhost:5432/consultorio";
+        String usuario = "postgres";
+        String contraseña = "D277353527316d*";
+
+        String sql = "SELECT contrasena FROM public.usuario WHERE correo = ? AND contrasena = ?";
+        try (Connection conexion = DriverManager.getConnection(url, usuario, contraseña);
+             PreparedStatement pstmt = conexion.prepareStatement(sql)) {
+            pstmt.setString(1, correo);
+            pstmt.setString(2, contrasena);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                MenuPrincipal menu = new MenuPrincipal();
+                menu.setVisible(true);
+            } else {
+                JOptionPane.showMessageDialog(this, "Correo o contraseña incorrectos", "Error de Inicio de Sesión", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
