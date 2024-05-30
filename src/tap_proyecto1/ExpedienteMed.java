@@ -187,8 +187,4 @@ public class ExpedienteMed extends JFrame{
         // Implementación para guardar el expediente
         JOptionPane.showMessageDialog(this, "Expediente guardado correctamente.");
     }
-
-    public static void main(String[] args) {
-        new ExpedienteMed();
-    }
 }
