@@ -43,6 +43,7 @@ public class Login extends javax.swing.JFrame {
         jLabel2 = new JLabel();
         fieldCorreo = new TextFieldRound();
         fieldPassword = new PasswordFieldRound();
+
         buttonColoredAction1 = new ButtonColoredAction();
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
