@@ -40,8 +40,8 @@ public class MenuPrincipal extends JFrame{
          ImageIcon iconoPaciente = new ImageIcon("imagenes/paciente.png");
          ImageIcon iconoCitas = new ImageIcon("imagenes/age.png");
         
-    //creacion de paneles y botones
-    //instanciar a los objetos 
+        //creacion de paneles y botones
+        //instanciar a los objetos 
         panel = new JPanel();
         panel2 = new JPanel();
         panelBotones = new JPanel();
@@ -55,7 +55,6 @@ public class MenuPrincipal extends JFrame{
         
         add(panel);
         panel.add(panelBotones,BorderLayout.WEST);
-        //panel.add(panelBotones,BorderLayout.WEST);
         panel.add(panel2,BorderLayout.EAST);
        
         fondo = new JLabel(imagenFondo);
