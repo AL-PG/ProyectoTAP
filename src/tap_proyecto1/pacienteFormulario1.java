@@ -191,6 +191,13 @@ public class pacienteFormulario1 extends JFrame {
                 direccionFocusLost(evt);
             }
         });
+        sexx.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Mujer", "Hombre" }));
+        sexx.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sexxActionPerformed(evt);
+            }
+        });
+
 
         ocupacion.setText("Ocupación");
         ocupacion.addFocusListener(new FocusAdapter() {
@@ -201,6 +208,21 @@ public class pacienteFormulario1 extends JFrame {
                 ocupacionFocusLost(evt);
             }
         });
+
+        diaNacimiento.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31" }));
+        diaNacimiento.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                diaNacimientoActionPerformed(evt);
+            }
+        });
+
+        mesNacimiento.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12" }));
+        mesNacimiento.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mesNacimientoActionPerformed(evt);
+            }
+        });
+
         anioNacimiento.setText("Año");
         anioNacimiento.addFocusListener(new FocusAdapter() {
             public void focusGained(FocusEvent evt) {
@@ -559,6 +581,8 @@ public class pacienteFormulario1 extends JFrame {
         direccion.setText("Direccion");
         }
     }
+    private void sexxActionPerformed(java.awt.event.ActionEvent evt) {
+    }
 
     private void ocupacionFocusGained(FocusEvent evt) {
         ocupacion.setText("");
@@ -568,6 +592,14 @@ public class pacienteFormulario1 extends JFrame {
         if (ocupacion.getText().isEmpty()){
         ocupacion.setText("Ocupacion");
         }        
+    }
+
+    private void diaNacimientoActionPerformed(ActionEvent evt) {
+        anioNacimiento.setText("");
+    }
+
+    private void mesNacimientoActionPerformed(ActionEvent evt) {
+        anioNacimiento.setText("");
     }
 
     private void anioNacimientoFocusGained(FocusEvent evt) {
