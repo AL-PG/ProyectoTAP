@@ -58,7 +58,6 @@ public class verCitasAdmin extends JFrame implements ActionListener {
 
         dayChooser.setBackground(Color.BLUE);
 
-
         add(panelCalendario, BorderLayout.CENTER);
 
         String[] columnasNombre = {"Hora", "Paciente", "Descripción", "Médico"};
@@ -101,12 +100,15 @@ public class verCitasAdmin extends JFrame implements ActionListener {
         JPanel panelMedico = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
         panelBotones = new JPanel(new BorderLayout());
+        
         nuevaCita = new JButton("Nueva cita");
         nuevaCita.setForeground(new Color(255, 255, 255));
         nuevaCita.setBackground(new Color(12, 111, 253));
+
         agregarPaciente = new JButton("Agregar Paciente");
         agregarPaciente.setForeground(new Color(255, 255, 255));
         agregarPaciente.setBackground(new Color(12, 111, 253));
+
         listarPaciente = new JButton("Listar Pacientes");
         listarPaciente.setForeground(new Color(255, 255, 255));
         listarPaciente.setBackground(new Color(12, 111, 253));
