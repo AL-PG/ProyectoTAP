@@ -53,26 +53,58 @@ public class pacienteFormulario1 extends javax.swing.JFrame {
 
                 LocalDate date = LocalDate.of(anioInt, mesInt, diaInt);
                 Date fechaNacB = Date.valueOf(date);
+                String motivoConsultaB = motivoVisita.getText();
+                String antecedentesMedicB = antecentesMedicos.getText();
+                String medicamentosActualesB = medicamentosMedicos.getText();
+                String alergiasB = alergias.getText();
+                String nombreSeguroB = nombreSeguro.getText();
+                String numeroPolizaB = numeroPoliza.getText();
+                String nombreTitularPoliaB = titularPoliza.getText();
+                String contactoEmerNombreB = contactoEmergia.getText();
+                String telefonoEmerB = telefonoEmergencia.getText();
+                String relacionPacienteB = relacionPaciente.getText();
+                String generoB = (String) sexx.getSelectedItem();
 
-                insertPaciente(nombreB, apellidosB, telefonoB, estadoCivilB, correoB, fechaNacB);
+
+                insertPaciente(nombreB, apellidosB, telefonoB, estadoCivilB, correoB, fechaNacB, motivoConsultaB, antecedentesMedicB, medicamentosActualesB,
+                alergiasB, nombreSeguroB, numeroPolizaB, nombreTitularPoliaB, contactoEmerNombreB, telefonoEmerB, relacionPacienteB, generoB);
             }
 
         });
        
     }
-    private void insertPaciente(String nombreB, String apellidosB, String telefonoB, String estadoCivilB, String correoB,  Date fechaNacB) {
-        String SQL_INSERT = "INSERT INTO paciente (nombre, apellidos, \"teléfono\", \"estadoCivil\", correo, \"fechaNac\") VALUES (?, ?, ?, ?, ?, ?)";
-    
+    public static void insertPaciente(String nombre, String apellidos, String telefono, String estadoCivil, 
+                                     String correo, Date fechaNac, String motivoConsulta, String antecedentesMedic, 
+                                     String medicamentosActuales, String alergias, String nombreSeguro, 
+                                     String numeroPoliza, String nombreTitularPoliza, String contactoEmerNombre, 
+                                     String telefonoEmer, String relacionPaciente, String genero) {
+        String sql = "INSERT INTO public.paciente (nombre, apellidos, \"teléfono\", \"estadoCivil\", correo, " +
+                     "\"fechaNac\", \"motivoConsulta\", \"antecedentesMedic\", \"medicamentosActuales\", alergias, " +
+                     "\"nombreSeguro\", \"numeroPoliza\", \"nombreTitularPolia\", \"contactoEmerNombre\", " +
+                     "\"telefonoEmer\", \"relacionPaciente\", genero) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
         try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
-             PreparedStatement preparedStatement = conn.prepareStatement(SQL_INSERT)) {
-            preparedStatement.setString(1, nombreB);
-            preparedStatement.setString(2, apellidosB);
-            preparedStatement.setString(3, telefonoB);
-            preparedStatement.setString(4, estadoCivilB);
-            preparedStatement.setString(5, correoB);
-            preparedStatement.setDate(6, fechaNacB);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, nombre);
+            pstmt.setString(2, apellidos);
+            pstmt.setString(3, telefono);
+            pstmt.setString(4, estadoCivil);
+            pstmt.setString(5, correo);
+            pstmt.setDate(6, fechaNac);
+            pstmt.setString(7, motivoConsulta);
+            pstmt.setString(8, antecedentesMedic);
+            pstmt.setString(9, medicamentosActuales);
+            pstmt.setString(10, alergias);
+            pstmt.setString(11, nombreSeguro);
+            pstmt.setString(12, numeroPoliza);
+            pstmt.setString(13, nombreTitularPoliza);
+            pstmt.setString(14, contactoEmerNombre);
+            pstmt.setString(15, telefonoEmer);
+            pstmt.setString(16, relacionPaciente);
+            pstmt.setString(17, genero);
     
-            int row = preparedStatement.executeUpdate();
+            int row =  pstmt.executeUpdate();
     
             if (row > 0) {
                 JOptionPane.showMessageDialog(null, "El paciente ha sido registrado exitosamente.");
@@ -83,7 +115,7 @@ public class pacienteFormulario1 extends javax.swing.JFrame {
             ex.printStackTrace();
         }
     }
-
+    
     
     /**
      * This method is called from within the constructor to initialize the form.
