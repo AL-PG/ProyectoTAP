@@ -5,7 +5,7 @@ public class Pacientes extends javax.swing.JFrame {
     /**
      * Creates new form Pacientes
      */
-    public Pacientes() {
+    public Pacientes(verCitasAdmin parent, boolean modal) {
         initComponents();
         setLocationRelativeTo(null);
     }
@@ -107,11 +107,6 @@ public class Pacientes extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Pacientes().setVisible(true);
-            }
-        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -120,3 +115,5 @@ public class Pacientes extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     // End of variables declaration//GEN-END:variables
 }
+
+
