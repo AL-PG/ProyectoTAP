@@ -18,7 +18,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import javax.swing.JOptionPane;
 import java.awt.EventQueue;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.event.ActionListener;
@@ -114,15 +113,21 @@ public class Login extends javax.swing.JFrame {
         String usuario = "postgres";
         String contraseña = "D277353527316d*";
 
-        String sql = "SELECT contrasena FROM public.usuario WHERE correo = ? AND contrasena = ?";
+        String sql = "SELECT contrasena, tipo FROM public.usuario WHERE correo = ? AND contrasena = ?";
         try (Connection conexion = DriverManager.getConnection(url, usuario, contraseña);
              PreparedStatement pstmt = conexion.prepareStatement(sql)) {
             pstmt.setString(1, correo);
             pstmt.setString(2, contrasena);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
+                String tipoDeUsuario = rs.getString("tipo");
+                           if ("Administrador".equals(tipoDeUsuario)) {
+                verCitasAdmin admin = new verCitasAdmin();
+                admin.setVisible(true);
+            } else {
                 MenuPrincipal menu = new MenuPrincipal();
                 menu.setVisible(true);
+            }
             } else {
                 JOptionPane.showMessageDialog(this, "Correo o contraseña incorrectos", "Error de Inicio de Sesión", JOptionPane.ERROR_MESSAGE);
             }

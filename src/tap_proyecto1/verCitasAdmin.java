@@ -23,6 +23,8 @@ public class verCitasAdmin extends JFrame implements ActionListener {
     private JPanel panelBotones;
     private JPanel panelCitas;
     private JButton nuevaCita;
+    private JButton agregarPaciente;
+    private JButton listarPaciente;
     private JLabel seleccionMedico;
     private JTable tablaCitas;
     private final JComboBox<String> medicosNombre;
@@ -102,12 +104,22 @@ public class verCitasAdmin extends JFrame implements ActionListener {
         nuevaCita = new JButton("Nueva cita");
         nuevaCita.setForeground(new Color(255, 255, 255));
         nuevaCita.setBackground(new Color(12, 111, 253));
+        agregarPaciente = new JButton("Agregar Paciente");
+        agregarPaciente.setForeground(new Color(255, 255, 255));
+        agregarPaciente.setBackground(new Color(12, 111, 253));
+        listarPaciente = new JButton("Listar Pacientes");
+        listarPaciente.setForeground(new Color(255, 255, 255));
+        listarPaciente.setBackground(new Color(12, 111, 253));
+        
         panelBotones.add(nuevaCita, BorderLayout.WEST);
+        panelBotones.add(agregarPaciente, BorderLayout.CENTER);
+        panelBotones.add(listarPaciente, BorderLayout.SOUTH);
 
         seleccionMedico = new JLabel("Seleccion de médico: ");
         panelMedico.add(seleccionMedico, BorderLayout.EAST);
         
         nuevaCita.addActionListener(this);
+        agregarPaciente.addActionListener(this);
 
         medicosNombre = new JComboBox<String>(nombres);
         medicosNombre.setMaximumRowCount(4);
@@ -142,13 +154,22 @@ public class verCitasAdmin extends JFrame implements ActionListener {
                     nuevaCita.setEnabled(true);
                 }
             });
+        }
 
-            agregaCitas.addWindowListener(new WindowAdapter() {
+        if (e.getSource() == agregarPaciente){
+            agregarPaciente.setEnabled(false);
+    
+            pacienteFormulario1 agregaPaciente = new pacienteFormulario1(this,true);
+            agregaPaciente.setVisible(true);
+            agregaPaciente.setSize(800, 800);
+    
+            agregaPaciente.addWindowListener(new WindowAdapter() {
                 @Override
-                public void windowClosing(WindowEvent e) {
-                    nuevaCita.setEnabled(true);
+                public void windowClosed(WindowEvent e) {
+                    agregarPaciente.setEnabled(true);
                 }
             });
+
         }
     }
     

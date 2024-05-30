@@ -72,13 +72,13 @@ public class MenuPrincipal extends JFrame{
         
         
         
-        botonP.addActionListener( new ActionListener() {
+       /* botonP.addActionListener( new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-           Pacientes perfil = new Pacientes();
+           Pacientes perfil = new Pacientes(this,true);
                 perfil.setVisible(true);
         }
-    });
+    });*/ 
         
         botonC.addActionListener( new ActionListener() {
             @Override

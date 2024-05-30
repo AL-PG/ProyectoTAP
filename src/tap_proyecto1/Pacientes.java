@@ -7,7 +7,7 @@ import javax.swing.WindowConstants;
 
 public class Pacientes extends JFrame {
 
-    public Pacientes() {
+    public Pacientes(verCitasAdmin parent, boolean modal) {
         initComponents();
         setLocationRelativeTo(null);
     }
@@ -77,3 +77,5 @@ public class Pacientes extends JFrame {
     private JButton jButton1;
     private JButton jButton2;
 }
+
+
