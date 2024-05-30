@@ -135,10 +135,6 @@ public class Login extends javax.swing.JFrame {
             e.printStackTrace();
         }
     }
-
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String args[]) {
         try {
             for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
@@ -156,9 +152,7 @@ public class Login extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
-        //</editor-fold>
 
-        /* Create and display the form */
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Login().setVisible(true);
