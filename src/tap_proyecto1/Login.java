@@ -2,7 +2,6 @@ package tap_proyecto1;
 
 import javax.swing.*;
 import org.edisoncor.gui.button.ButtonColoredAction;
-import org.edisoncor.gui.button.ButtonRound;
 import org.edisoncor.gui.passwordField.PasswordFieldRound;
 import org.edisoncor.gui.textField.TextFieldRound;
 import java.awt.event.ActionListener;
@@ -19,8 +18,10 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
+import java.awt.EventQueue;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import java.awt.event.ActionListener;
+import java.awt.Color;
 
 public class Login extends javax.swing.JFrame {
     
@@ -41,6 +42,7 @@ public class Login extends javax.swing.JFrame {
         jLabel2 = new JLabel();
         fieldCorreo = new TextFieldRound();
         fieldPassword = new PasswordFieldRound();
+
         buttonColoredAction1 = new ButtonColoredAction();
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -49,9 +51,9 @@ public class Login extends javax.swing.JFrame {
 
         jLabel2.setText("Contraseña:");
 
-        buttonColoredAction1.setBackground(new java.awt.Color(153, 204, 255));
+        buttonColoredAction1.setBackground(new Color(153, 204, 255));
         buttonColoredAction1.setText("Entrar");
-        buttonColoredAction1.addActionListener(new java.awt.event.ActionListener() {
+        buttonColoredAction1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 buttonColoredAction1ActionPerformed(evt);
             }
@@ -101,10 +103,6 @@ public class Login extends javax.swing.JFrame {
         );
 
         pack();
-    }
-
-    private void buttonRound1ActionPerformed(ActionEvent evt) {
-        
     }
 
     private void buttonColoredAction1ActionPerformed(ActionEvent evt) {
@@ -161,7 +159,7 @@ public class Login extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
+        EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Login().setVisible(true);
             }
