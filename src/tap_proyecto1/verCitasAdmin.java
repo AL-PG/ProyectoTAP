@@ -91,7 +91,7 @@ public class verCitasAdmin extends JFrame implements ActionListener {
             consultarCitas();
         } catch (SQLException e) {
             e.printStackTrace();
-            // Manejo de excepciones
+            
         }
 
         tablaCitas.getTableHeader().setDefaultRenderer(new DefaultTableCellRenderer() {
@@ -135,7 +135,7 @@ public class verCitasAdmin extends JFrame implements ActionListener {
         panelBotones.add(listarPaciente, BorderLayout.SOUTH);
 
         seleccionMedico = new JLabel("Seleccion de médico: ");
-        panelMedico.add(seleccionMedico, BorderLayout.EAST);
+        /*panelMedico.add(seleccionMedico, BorderLayout.EAST);*/
         listarPaciente.addActionListener(this);
         nuevaCita.addActionListener(this);
         agregarPaciente.addActionListener(this);
@@ -143,7 +143,7 @@ public class verCitasAdmin extends JFrame implements ActionListener {
         medicosIds = new JComboBox<Integer>(idsMedicos);
         medicosIds.setMaximumRowCount(3);
         medicosIds.setBorder(border);
-        panelMedico.add(medicosIds, BorderLayout.CENTER);
+        /*panelMedico.add(medicosIds, BorderLayout.CENTER);*/
 
         panelMedico.setBackground(Color.WHITE);
 
@@ -230,19 +230,48 @@ public class verCitasAdmin extends JFrame implements ActionListener {
              ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
-                model.addRow(new Object[]{rs.getString("hora"), rs.getInt("idPaciente"), rs.getString("descripción"), rs.getInt("idUsuario")});
+                model.addRow(new Object[]{rs.getString("hora"), getPacienteIdByName(rs.getInt("idPaciente")), rs.getString("descripción"), getMedicoIdByName(rs.getInt("idUsuario"))});
             }
         }
     }
 
+    public String getMedicoIdByName(int idUsuario) {
+        String query = "SELECT nombre FROM usuario WHERE \"idUsuario\" = ?";
+        try (Connection connection = DriverManager.getConnection(DB_URL, USER, PASS);
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, idUsuario);
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                return rs.getString("nombre");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "no se encuentra"; 
+    }
+
+    public String getPacienteIdByName(int idPaciente) {
+        String query = "SELECT nombre FROM paciente WHERE \"idPaciente\" = ? ";
+        try (Connection connection = DriverManager.getConnection(DB_URL, USER, PASS);
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, idPaciente);
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                return rs.getString("nombre");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "no se encuentra";}
+
     private void cargarCitasPorFecha(Date fecha) {
-        model.setRowCount(0); // Limpiar la tabla antes de cargar nuevas citas
+        model.setRowCount(0); 
     
-        // Consultar las citas para la fecha seleccionada
+        
         String sql = "SELECT hora, \"idPaciente\", descripción, \"idUsuario\" FROM citas WHERE fecha = ?";
         try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setDate(1, new java.sql.Date(fecha.getTime())); // Convertir la fecha a java.sql.Date
+            stmt.setDate(1, new java.sql.Date(fecha.getTime())); 
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     model.addRow(new Object[]{rs.getString("hora"), rs.getInt("idPaciente"), rs.getString("descripción"), rs.getInt("idUsuario")});

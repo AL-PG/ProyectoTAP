@@ -38,7 +38,7 @@ public class MenuPrincipal extends JFrame{
          ImageIcon iconoAdmin = new ImageIcon("imagenes/candado.jpg");
          ImageIcon imagenFondo = new ImageIcon("imagenes/cons.png");
          ImageIcon iconoPaciente = new ImageIcon("imagenes/paciente.png");
-         ImageIcon iconoCitas = new ImageIcon("imagenes/age.png");
+         ImageIcon iconoCitas = new ImageIcon("\"C:\\Users\\david\\OneDrive\\Documentos\\Tec\\4 semestre\\Topicos avanzados\\Unidad 4\\Proyecto TAP 2\\ProyectoTap\\imagenes\\age.png\"");
         
         //creacion de paneles y botones
         //instanciar a los objetos 
@@ -69,8 +69,6 @@ public class MenuPrincipal extends JFrame{
         panelBotones.add(botonC);
         panelBotones.add(botonAdmin);
         panel2.add(fondo);
-        
-        
         
        /* botonP.addActionListener( new ActionListener() {
         @Override
