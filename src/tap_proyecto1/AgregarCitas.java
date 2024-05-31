@@ -14,6 +14,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.sql.Time;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 public class AgregarCitas extends JFrame implements ActionListener {
     private final JLabel MedicoLabel;
@@ -221,13 +224,24 @@ public class AgregarCitas extends JFrame implements ActionListener {
 
             String horaFormateada = String.format("%02d:%02d", hora, minutos);
 
+            Time horaSQL = null;
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+                java.util.Date utilDate = sdf.parse(horaFormateada);
+                horaSQL = new Time(utilDate.getTime());
+            } catch (ParseException ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error en el formato de la hora.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
             int medicoId = getMedicoIdByName(nombreMedico);
             System.out.println("soy medico " + medicoId);
             int pacienteId = getPacienteIdByName(nombrePaciente, apellidosPaciente);
             System.out.println("Soy paciente " +pacienteId);
 
             if (medicoId != -1 && pacienteId != -1) {
-                guardarCita(medicoId, pacienteId, descripcion, fechaNacB, horaFormateada, notas);
+                guardarCita(medicoId, pacienteId, descripcion, fechaNacB, horaSQL, notas);
                 JOptionPane.showMessageDialog(this, "Cita guardada con éxito!");
                 dispose();
             } else {
@@ -273,16 +287,16 @@ private Connection getConnection() throws SQLException {
         }
         return -1;}
     
-    public void guardarCita(int medicoId, int pacienteId, String descripcion, Date fechaNacB, String hora, String notas) {
-        String query = "INSERT INTO citas (medico_id, paciente_id, descripcion, fecha, hora, notas) VALUES (?, ?, ?, ?, ?, ?)";
+    public void guardarCita(int medicoId, int pacienteId, String descripcion, Date fechaNacB, Time hora, String notas) {
+        String query = "INSERT INTO citas (fecha, hora, descripción, extra, \"idPaciente\", \"idUsuario\") VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, medicoId);
-            statement.setInt(2, pacienteId);
+            statement.setDate(1, fechaNacB);
+            statement.setTime(2, hora);
             statement.setString(3, descripcion);
-            statement.setDate(4, fechaNacB);
-            statement.setString(5, hora);
-            statement.setString(6, notas);
+            statement.setString(4, notas);
+            statement.setInt(5, pacienteId);
+            statement.setInt(6, medicoId);
             int row = statement.executeUpdate();
 
             if (row > 0) {
