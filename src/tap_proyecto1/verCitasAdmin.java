@@ -4,7 +4,14 @@ package tap_proyecto1;
 import com.toedter.calendar.JCalendar;
 import com.toedter.calendar.JDayChooser;
 import java.awt.event.WindowEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.awt.event.WindowAdapter;
 
 import javax.swing.*;
@@ -16,6 +23,9 @@ import java.util.Calendar;
 import java.text.SimpleDateFormat;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Date;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 public class verCitasAdmin extends JFrame implements ActionListener {
     private JCalendar calendario;
@@ -28,13 +38,16 @@ public class verCitasAdmin extends JFrame implements ActionListener {
     private JButton listarPaciente;
     private JLabel seleccionMedico;
     private JTable tablaCitas;
-    private final JComboBox<String> medicosNombre;
-    private static final String nombres[] = {
-        "Médico 1",
-        "Médico 2",
-        "Médico 3",
-        "Médico 4"
+    private final JComboBox<Integer> medicosIds;
+    private static final Integer idsMedicos[] = {
+        1,
+        2,
+        3,
     };
+    private static final String DB_URL = "jdbc:postgresql://localhost:5432/consultorio";
+    private static final String USER = "postgres";
+    private static final String PASS = "D277353527316d*";
+    private DefaultTableModel model;
 
     public verCitasAdmin() {
         super("Agenda de Citas");
@@ -56,27 +69,30 @@ public class verCitasAdmin extends JFrame implements ActionListener {
         calendario.setBorder(border);
 
         JDayChooser dayChooser = calendario.getDayChooser();
+        dayChooser.addPropertyChangeListener("day", new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                cargarCitasPorFecha(calendario.getDate());
+            }
+        });
 
         dayChooser.setBackground(Color.BLUE);
 
         add(panelCalendario, BorderLayout.CENTER);
 
         String[] columnasNombre = {"Hora", "Paciente", "Descripción", "Médico"};
-        DefaultTableModel model = new DefaultTableModel(null, columnasNombre);
+        model = new DefaultTableModel(null, columnasNombre);
+        tablaCitas = new JTable();
+        this.tablaCitas.setModel(model);
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 7);
-        calendar.set(Calendar.MINUTE, 0);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm a");
-        while (calendar.get(Calendar.HOUR_OF_DAY) < 22) {
-            String hora = dateFormat.format(calendar.getTime());
-            model.addRow(new Object[]{hora, "", "", ""}); 
-            calendar.add(Calendar.MINUTE, 20);
-        }
-
-        tablaCitas = new JTable(model);
         tablaCitas.setEnabled(false);
         tablaCitas.setFont(new Font("Arial", Font.PLAIN, 15));
+        try {
+            consultarCitas();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Manejo de excepciones
+        }
 
         tablaCitas.getTableHeader().setDefaultRenderer(new DefaultTableCellRenderer() {
             @Override
@@ -124,10 +140,10 @@ public class verCitasAdmin extends JFrame implements ActionListener {
         nuevaCita.addActionListener(this);
         agregarPaciente.addActionListener(this);
 
-        medicosNombre = new JComboBox<String>(nombres);
-        medicosNombre.setMaximumRowCount(4);
-        medicosNombre.setBorder(border);
-        panelMedico.add(medicosNombre, BorderLayout.CENTER);
+        medicosIds = new JComboBox<Integer>(idsMedicos);
+        medicosIds.setMaximumRowCount(3);
+        medicosIds.setBorder(border);
+        panelMedico.add(medicosIds, BorderLayout.CENTER);
 
         panelMedico.setBackground(Color.WHITE);
 
@@ -201,5 +217,47 @@ public class verCitasAdmin extends JFrame implements ActionListener {
 
         }
     }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            verCitasAdmin frame = new verCitasAdmin();
+            frame.setSize(800, 850);
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setVisible(true);
+        });
+    }
+
+    public void consultarCitas() throws SQLException {
+        String sql = "SELECT hora, \"idPaciente\", descripción, \"idUsuario\" FROM citas";
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                model.addRow(new Object[]{rs.getString("hora"), rs.getInt("idPaciente"), rs.getString("descripción"), rs.getInt("idUsuario")});
+            }
+        }
+    }
+
+    private void cargarCitasPorFecha(Date fecha) {
+        model.setRowCount(0); // Limpiar la tabla antes de cargar nuevas citas
+    
+        // Consultar las citas para la fecha seleccionada
+        String sql = "SELECT hora, \"idPaciente\", descripción, \"idUsuario\" FROM citas WHERE fecha = ?";
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setDate(1, new java.sql.Date(fecha.getTime())); // Convertir la fecha a java.sql.Date
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    model.addRow(new Object[]{rs.getString("hora"), rs.getInt("idPaciente"), rs.getString("descripción"), rs.getInt("idUsuario")});
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Manejo de excepciones
+        }
+    }
+    
     
 }

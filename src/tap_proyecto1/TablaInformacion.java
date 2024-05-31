@@ -58,5 +58,6 @@ public class TablaInformacion extends JFrame{
             }
         }
     }
+    
 
 }
