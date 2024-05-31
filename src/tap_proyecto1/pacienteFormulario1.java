@@ -18,7 +18,7 @@ import java.awt.*;
 public class pacienteFormulario1 extends JFrame {
     private static final String DB_URL = "jdbc:postgresql://localhost:5432/consultorio";
     private static final String USER = "postgres";
-    private static final String PASS = "D277353527316d*";
+    private static final String PASS = "D277353527316d";
 
     public pacienteFormulario1(verCitasAdmin parent, boolean modal) {
         initComponents();
@@ -111,8 +111,6 @@ public class pacienteFormulario1 extends JFrame {
         }
     }
     
-    @SuppressWarnings("unchecked")
-
     private void initComponents() {
 
         jScrollPane1 = new JScrollPane();

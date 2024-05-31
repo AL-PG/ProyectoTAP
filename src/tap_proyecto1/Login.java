@@ -111,7 +111,7 @@ public class Login extends javax.swing.JFrame {
 
         String url = "jdbc:postgresql://localhost:5432/consultorio";
         String usuario = "postgres";
-        String contraseña = "D277353527316d*";
+        String contraseña = "D277353527316d";
 
         String sql = "SELECT contrasena, tipo FROM public.usuario WHERE correo = ? AND contrasena = ?";
         try (Connection conexion = DriverManager.getConnection(url, usuario, contraseña);

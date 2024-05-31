@@ -12,7 +12,7 @@ import java.sql.Statement;
 public class TablaInformacion extends JFrame{
     private static final String DB_URL = "jdbc:postgresql://localhost:5432/consultorio";
     private static final String USER = "postgres";
-    private static final String PASS = "D277353527316d*";
+    private static final String PASS = "D277353527316d";
     private DefaultTableModel table;
 
     public TablaInformacion() throws SQLException{

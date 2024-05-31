@@ -178,7 +178,6 @@ public class verCitasAdmin extends JFrame implements ActionListener {
 
         if (e.getSource() == listarPaciente){
             listarPaciente.setEnabled(false);
-            System.out.print("asd talba");
             TablaInformacion listaP;
             try {
                 listaP = new TablaInformacion();
@@ -195,10 +194,6 @@ public class verCitasAdmin extends JFrame implements ActionListener {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();
             }
-            
-            
-            System.out.print("Cargando talba");
-
         }
     }
     
