@@ -4,6 +4,7 @@ package tap_proyecto1;
 import com.toedter.calendar.JCalendar;
 import com.toedter.calendar.JDayChooser;
 import java.awt.event.WindowEvent;
+import java.sql.SQLException;
 import java.awt.event.WindowAdapter;
 
 import javax.swing.*;
@@ -119,7 +120,7 @@ public class verCitasAdmin extends JFrame implements ActionListener {
 
         seleccionMedico = new JLabel("Seleccion de médico: ");
         panelMedico.add(seleccionMedico, BorderLayout.EAST);
-        
+        listarPaciente.addActionListener(this);
         nuevaCita.addActionListener(this);
         agregarPaciente.addActionListener(this);
 
@@ -143,6 +144,7 @@ public class verCitasAdmin extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        
         if (e.getSource() == nuevaCita) {
             nuevaCita.setEnabled(false);
     
@@ -171,6 +173,31 @@ public class verCitasAdmin extends JFrame implements ActionListener {
                     agregarPaciente.setEnabled(true);
                 }
             });
+
+        }
+
+        if (e.getSource() == listarPaciente){
+            listarPaciente.setEnabled(false);
+            System.out.print("asd talba");
+            TablaInformacion listaP;
+            try {
+                listaP = new TablaInformacion();
+                listaP.setVisible(true);
+                listaP.setSize(800, 800);
+        
+                listaP.addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosed(WindowEvent e) {
+                        agregarPaciente.setEnabled(true);
+                    }
+                });
+            } catch (SQLException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+            
+            
+            System.out.print("Cargando talba");
 
         }
     }
