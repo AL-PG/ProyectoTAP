@@ -2,7 +2,6 @@ package tap_proyecto1;
 
 import java.awt.Color;
 import java.awt.Font;
-
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -66,7 +65,7 @@ public class VerPacientes extends JFrame{
     
         setSize(605,880);
         setBackground(Color.WHITE);
-
+        
         Font fontTitulos = new Font("Arial", Font.BOLD, 20);
         Font font = new Font("Arial", Font.BOLD, 14); 
         Border bordeInferior = BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLUE);
