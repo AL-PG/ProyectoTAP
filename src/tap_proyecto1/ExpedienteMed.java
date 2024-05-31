@@ -2,17 +2,32 @@ package tap_proyecto1;
 
 import javax.swing.*;
 import java.awt.*;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Time;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings("unused")
 
 public class ExpedienteMed extends JFrame{
-    private JTextField nombreCompletoField, fechaField, fechaNacimientoField, ocupacionField;
+    private JTextField nombreCompletoField, fechaNacimientoField, ocupacionField;
     private JComboBox<String> generoComboBox;
     private JTextArea alergiasTextArea, operacionesTextArea, otrosPadecimientosTextArea;
-    private JCheckBox ningunaAlergiaCheckBox, ningunaOperacionCheckBox;
+    private JCheckBox ningunaAlergiaCheckBox, ningunaOperacionCheckBox,ningunaMedicamentpCheckBox;
     private JCheckBox altaPresionCheckBox, diabetesCheckBox, cancerCheckBox, anemiaCheckBox, fCardiacaCheckBox, neumoniaCheckBox, indigestionCheckBox, diarreaCheckBox, bronquitisCheckBox, ulceraCheckBox, hepatitisCheckBox, artritisCheckBox, depresionCheckBox, alcoholismoCheckBox, drogadiccionCheckBox, hemorroidesCheckBox, otroPadecimientoCheckBox;
     private JTextField sustanciasField, dosisField;
     private JTextField madreField, padreField, hermanosField, abuelaField, abueloField;
+
+    private static final String URL = "jdbc:postgresql://localhost:5432/consultorio";
+    private static final String USUARIO = "postgres";
+    private static final String CONTRASEÑA = "D277353527316d";
 
     public ExpedienteMed() {
         setTitle("Expediente Médico");
@@ -25,16 +40,41 @@ public class ExpedienteMed extends JFrame{
         mainPanel.setLayout(null);
         mainPanel.setPreferredSize(new Dimension(800, 1600)); // Ajustar según el contenido
 
-        int y = 10;  // Coordenada y inicial
+        ningunaAlergiaCheckBox = new JCheckBox("Ninguno");
+        ningunaOperacionCheckBox = new JCheckBox("Ninguno");
+        ningunaMedicamentpCheckBox = new JCheckBox("Ninguno");
+        altaPresionCheckBox = new JCheckBox("Alta Presión");
+        diabetesCheckBox = new JCheckBox("Diabetes");
+        cancerCheckBox = new JCheckBox("Cáncer");
+        anemiaCheckBox = new JCheckBox("Anemia");
+        fCardiacaCheckBox = new JCheckBox("Fallo Cardíaco");
+        neumoniaCheckBox = new JCheckBox("Neumonía");
+        indigestionCheckBox = new JCheckBox("Indigestión");
+        diarreaCheckBox = new JCheckBox("Diarrea");
+        bronquitisCheckBox = new JCheckBox("Bronquitis");
+        ulceraCheckBox = new JCheckBox("Úlcera");
+        hepatitisCheckBox = new JCheckBox("Hepatitis");
+        artritisCheckBox = new JCheckBox("Artritis");
+        depresionCheckBox = new JCheckBox("Depresión");
+        alcoholismoCheckBox = new JCheckBox("Alcoholismo");
+        drogadiccionCheckBox = new JCheckBox("Drogadicción");
+        hemorroidesCheckBox = new JCheckBox("Hemorroides");
+        otroPadecimientoCheckBox = new JCheckBox("Otro Padecimiento");
 
+        JCheckBox[] checkBoxArray = new JCheckBox[]{
+            altaPresionCheckBox, diabetesCheckBox, cancerCheckBox, anemiaCheckBox, fCardiacaCheckBox,
+            neumoniaCheckBox, indigestionCheckBox, diarreaCheckBox, bronquitisCheckBox, ulceraCheckBox,
+            hepatitisCheckBox, artritisCheckBox, depresionCheckBox, alcoholismoCheckBox,
+            drogadiccionCheckBox, hemorroidesCheckBox, otroPadecimientoCheckBox
+        };
+
+
+        int y = 10;  // Coordenada y inicial
         // Sección de Información Personal
         addLabel(mainPanel, "INFORMACIÓN PERSONAL", 10, y, 780, 30, true);
         y += 40;
         addLabel(mainPanel, "Nombre Completo:", 10, y, 200, 30);
         nombreCompletoField = addTextField(mainPanel, 220, y, 560, 30);
-        y += 40;
-        addLabel(mainPanel, "Fecha:", 10, y, 200, 30);
-        fechaField = addTextField(mainPanel, 220, y, 560, 30);
         y += 40;
         addLabel(mainPanel, "Fecha de Nacimiento:", 10, y, 200, 30);
         fechaNacimientoField = addTextField(mainPanel, 220, y, 560, 30);
@@ -49,7 +89,7 @@ public class ExpedienteMed extends JFrame{
         // Sección de Alergias a Medicamentos u Otras Sustancias
         addLabel(mainPanel, "ALERGIAS A MEDICAMENTOS U OTRAS SUSTANCIAS", 10, y, 780, 30, true);
         y += 40;
-        ningunaAlergiaCheckBox = addCheckBox(mainPanel, "Ninguna", 10, y, 780, 30);
+        ningunaAlergiaCheckBox = addCheckBox(mainPanel, ningunaAlergiaCheckBox, 10, y, 780, 30);
         y += 40;
         alergiasTextArea = addTextArea(mainPanel, 10, y, 770, 60);
         y += 70;
@@ -57,7 +97,7 @@ public class ExpedienteMed extends JFrame{
         // Sección de Medicamentos, Vitaminas, Suplementos
         addLabel(mainPanel, "ACTUALES MEDICAMENTOS, VITAMINAS, SUPLEMENTOS", 10, y, 780, 30, true);
         y += 40;
-        ningunaAlergiaCheckBox = addCheckBox(mainPanel, "Ninguna", 10, y, 780, 30);
+        ningunaMedicamentpCheckBox = addCheckBox(mainPanel, ningunaMedicamentpCheckBox, 10, y, 780, 30);
         y += 40;
         addLabel(mainPanel, "Sustancias:", 10, y, 200, 30);
         sustanciasField = addTextField(mainPanel, 220, y, 560, 30);
@@ -69,7 +109,7 @@ public class ExpedienteMed extends JFrame{
         // Sección de Operaciones y Hospitalizaciones
         addLabel(mainPanel, "OPERACIONES Y HOSPITALIZACIONES", 10, y, 780, 30, true);
         y += 40;
-        ningunaOperacionCheckBox = addCheckBox(mainPanel, "Ninguna", 10, y, 780, 30);
+        ningunaOperacionCheckBox = addCheckBox(mainPanel, ningunaOperacionCheckBox, 10, y, 780, 30);
         y += 40;
         operacionesTextArea = addTextArea(mainPanel, 10, y, 770, 60);
         y += 70;
@@ -77,27 +117,27 @@ public class ExpedienteMed extends JFrame{
         // Sección de Historia Médica de Padecimientos
         addLabel(mainPanel, "HISTORIA MÉDICA DE PADECIMIENTOS", 10, y, 780, 30, true);
         y += 40;
-        altaPresionCheckBox = addCheckBox(mainPanel, "Alta Presión", 10, y, 190, 30);
-        diabetesCheckBox = addCheckBox(mainPanel, "Diabetes", 200, y, 190, 30);
-        cancerCheckBox = addCheckBox(mainPanel, "Cancer", 390, y, 190, 30);
-        anemiaCheckBox = addCheckBox(mainPanel, "Anemia", 580, y, 190, 30);
+        altaPresionCheckBox = addCheckBox(mainPanel, altaPresionCheckBox, 10, y, 190, 30);
+        diabetesCheckBox = addCheckBox(mainPanel, diabetesCheckBox, 200, y, 190, 30);
+        cancerCheckBox = addCheckBox(mainPanel, cancerCheckBox, 390, y, 190, 30);
+        anemiaCheckBox = addCheckBox(mainPanel, anemiaCheckBox, 580, y, 190, 30);
         y += 40;
-        fCardiacaCheckBox = addCheckBox(mainPanel, "F. Cardiaca", 10, y, 190, 30);
-        neumoniaCheckBox = addCheckBox(mainPanel, "Neumonía", 200, y, 190, 30);
-        indigestionCheckBox = addCheckBox(mainPanel, "Indigestión", 390, y, 190, 30);
-        diarreaCheckBox = addCheckBox(mainPanel, "Diarrea", 580, y, 190, 30);
+        fCardiacaCheckBox = addCheckBox(mainPanel, fCardiacaCheckBox, 10, y, 190, 30);
+        neumoniaCheckBox = addCheckBox(mainPanel, neumoniaCheckBox, 200, y, 190, 30);
+        indigestionCheckBox = addCheckBox(mainPanel, indigestionCheckBox, 390, y, 190, 30);
+        diarreaCheckBox = addCheckBox(mainPanel, diarreaCheckBox, 580, y, 190, 30);
         y += 40;
-        bronquitisCheckBox = addCheckBox(mainPanel, "Bronquitis", 10, y, 190, 30);
-        ulceraCheckBox = addCheckBox(mainPanel, "Úlcera", 200, y, 190, 30);
-        hepatitisCheckBox = addCheckBox(mainPanel, "Hepatitis", 390, y, 190, 30);
-        artritisCheckBox = addCheckBox(mainPanel, "Artritis", 580, y, 190, 30);
+        bronquitisCheckBox = addCheckBox(mainPanel, bronquitisCheckBox, 10, y, 190, 30);
+        ulceraCheckBox = addCheckBox(mainPanel, ulceraCheckBox, 200, y, 190, 30);
+        hepatitisCheckBox = addCheckBox(mainPanel, hepatitisCheckBox, 390, y, 190, 30);
+        artritisCheckBox = addCheckBox(mainPanel, artritisCheckBox, 580, y, 190, 30);
         y += 40;
-        depresionCheckBox = addCheckBox(mainPanel, "Depresión", 10, y, 190, 30);
-        alcoholismoCheckBox = addCheckBox(mainPanel, "Alcoholismo", 200, y, 190, 30);
-        drogadiccionCheckBox = addCheckBox(mainPanel, "Drogadicción", 390, y, 190, 30);
-        hemorroidesCheckBox = addCheckBox(mainPanel, "Hemorroides", 580, y, 190, 30);
+        depresionCheckBox = addCheckBox(mainPanel, depresionCheckBox, 10, y, 190, 30);
+        alcoholismoCheckBox = addCheckBox(mainPanel, alcoholismoCheckBox, 200, y, 190, 30);
+        drogadiccionCheckBox = addCheckBox(mainPanel, drogadiccionCheckBox, 390, y, 190, 30);
+        hemorroidesCheckBox = addCheckBox(mainPanel, hemorroidesCheckBox, 580, y, 190, 30);
         y += 40;
-        otroPadecimientoCheckBox = addCheckBox(mainPanel, "Otro", 10, y, 780, 30);
+        otroPadecimientoCheckBox = addCheckBox(mainPanel, otroPadecimientoCheckBox, 10, y, 780, 30);
         y += 40;
         otrosPadecimientosTextArea = addTextArea(mainPanel, 10, y, 770, 60);
         y += 70;
@@ -126,7 +166,14 @@ public class ExpedienteMed extends JFrame{
         guardarSalirButton.setBackground(Color.BLUE);
         guardarSalirButton.setForeground(Color.WHITE);
         guardarSalirButton.setBounds(300, y, 200, 40);
-        guardarSalirButton.addActionListener(e -> guardarExpediente());
+        guardarSalirButton.addActionListener(e -> {
+            try {
+                guardarExpediente(checkBoxArray);
+            } catch (ParseException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+        });
         mainPanel.add(guardarSalirButton);
 
         // Añadir el panel principal a un JScrollPane
@@ -167,11 +214,10 @@ public class ExpedienteMed extends JFrame{
         return comboBox;
     }
 
-    private JCheckBox addCheckBox(JPanel panel, String text, int x, int y, int width, int height) {
-        JCheckBox checkBox = new JCheckBox(text);
-        checkBox.setBounds(x, y, width, height);
-        panel.add(checkBox);
-        return checkBox;
+    private JCheckBox addCheckBox(JPanel panel, JCheckBox text, int x, int y, int width, int height) {
+        text.setBounds(x, y, width, height);
+        panel.add(text);
+        return text;
     }
 
     private JTextArea addTextArea(JPanel panel, int x, int y, int width, int height) {
@@ -183,8 +229,95 @@ public class ExpedienteMed extends JFrame{
     }
 
     // Método para guardar el expediente
-    private void guardarExpediente() {
-        // Implementación para guardar el expediente
+    private void guardarExpediente(JCheckBox[] checkBoxArray) throws ParseException {
+        String Alergias = "";
+        String Medicamentos = "";
+        String Operacion = "";
+        String Enfermedades = "";
+        String Dosis = "";
+        
+        String NombreCompleto = nombreCompletoField.getText();
+
+        String FechaNacimiento = fechaNacimientoField.getText(); 
+        LocalDate dateFormat = LocalDate.parse(FechaNacimiento);
+        Date date = Date.valueOf(FechaNacimiento);
+
+        String Genero = (String) generoComboBox.getSelectedItem();
+        String Ocupación = ocupacionField.getText();
+        
+        if (ningunaAlergiaCheckBox.isSelected()) {
+            Alergias = ningunaAlergiaCheckBox.getText();
+        } else {
+            Alergias = alergiasTextArea.getText();
+        }
+
+        if (ningunaMedicamentpCheckBox.isSelected()) {
+             Medicamentos = ningunaAlergiaCheckBox.getText();
+             Dosis = ningunaAlergiaCheckBox.getText();
+            
+        } else {
+             Medicamentos = sustanciasField.getText();
+             Dosis = dosisField.getText();
+        }
+
+        if (ningunaOperacionCheckBox.isSelected()) {
+             Operacion = ningunaOperacionCheckBox.getText();
+        } else {
+             Operacion = operacionesTextArea.getText();
+        }
+        
+        for (JCheckBox jCheckBox : checkBoxArray) {
+            if (jCheckBox.isSelected()) {
+                 Enfermedades += jCheckBox.getText() + ", ";
+            }
+             Enfermedades += otrosPadecimientosTextArea.getText();
+        }
+
+        String HMadre = madreField.getText();
+        String HPadre = padreField.getText();
+        String HHermanos = hermanosField.getText();
+        String HAbuela = abuelaField.getText();
+        String HAbuelo = abueloField.getText();
+
+        guardarCita(NombreCompleto, date, Genero, Ocupación, Alergias, Medicamentos, Dosis, Operacion, Enfermedades, HMadre, HPadre, HHermanos, HAbuela, HAbuelo);
+
         JOptionPane.showMessageDialog(this, "Expediente guardado correctamente.");
+    }
+
+    private Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(URL, USUARIO, CONTRASEÑA);
+    }
+
+
+    public void guardarCita(String NombreCompleto, Date FechaNacimiento, String Genero, String Ocupacion, String Alergias, String Sustancias, String Dosis, String Operacion, String Padecimientos, String HMadre, String HPadre, String HHermanos, String HAbuela, String HAbuelo) {
+        String query = "INSERT INTO expedientemedico (nombrecompleto, fechanacimiento, genero, ocupacion, alergias, sustancias, dosis, operaciones, padecimientos, hmadre, hpadre, hhermanos, habuela, habuelo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            
+            statement.setString(1, NombreCompleto);
+            statement.setDate(2, FechaNacimiento);
+            statement.setString(3, Genero);
+            statement.setString(4, Ocupacion);
+            statement.setString(5, Alergias);
+            statement.setString(6, Sustancias);
+            statement.setString(7, Dosis);
+            statement.setString(8, Operacion);
+            statement.setString(9, Padecimientos);
+            statement.setString(10, HMadre);
+            statement.setString(11, HPadre);
+            statement.setString(12, HHermanos);
+            statement.setString(13, HAbuela);
+            statement.setString(14, HAbuelo);
+            int row = statement.executeUpdate();
+
+            if (row > 0) {
+                JOptionPane.showMessageDialog(null, "Ha sido registrado exitosamente.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public static void main(String[] args) {
+        new ExpedienteMed();
     }
 }

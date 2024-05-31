@@ -52,7 +52,7 @@ public class AgregarCitas extends JFrame implements ActionListener {
     private final JTextField anio;
     private static final String URL = "jdbc:postgresql://localhost:5432/consultorio";
     private static final String USUARIO = "postgres";
-    private static final String CONTRASEÑA = "D277353527316d*";
+    private static final String CONTRASEÑA = "D277353527316d";
 
     private static final String nombres[] = {
         "Fernando Alarcón Rojas",
